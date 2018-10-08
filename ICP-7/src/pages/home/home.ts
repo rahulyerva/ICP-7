@@ -54,11 +54,13 @@ export class HomePage {
 
     this.camera.getPicture(options).then((imageData) => {
       this.base64Image = 'data:image/jpeg;base64,' + imageData;
+      let push = true;
       this.fire.authState.subscribe(auth => {
-        if (auth.uid !== null) {
+        if (auth.uid !== null && push) {
         this.fireDb.list(`images/${auth.uid}`).push(this.base64Image)
           .then(() => {
             this.presentToast("Image Saved.");
+            push = false;
           });
         }
       })
